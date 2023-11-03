@@ -8,6 +8,7 @@ import {
   Navigate,
   useNavigate,
 } from "react-router-dom";
+import { useField } from "./hooks";
 
 const Menu = () => {
   const padding = {
@@ -88,21 +89,28 @@ const Footer = () => (
 );
 
 const CreateNew = (prop) => {
+  const content = useField("text");
+  const author = useField("text");
+  const info = useField("text");
   const navigate = useNavigate();
-  const [content, setContent] = useState("");
-  const [author, setAuthor] = useState("");
-  const [info, setInfo] = useState("");
 
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log("adding");
+    console.log(content);
+    console.log(author);
+    console.log(info);
     prop.addNew({
-      content,
-      author,
-      info,
+      content: content.value,
+      author: author.value,
+      info: info.value,
       votes: 0,
     });
     navigate("/");
+  };
+
+  const handleReset = () => {
+    content.reset(), author.reset(), info.reset();
   };
 
   return (
@@ -113,27 +121,33 @@ const CreateNew = (prop) => {
           content
           <input
             name="content"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
+            value={content.value}
+            onChange={content.onChange}
+            type={content.type}
           />
         </div>
         <div>
           author
           <input
             name="author"
-            value={author}
-            onChange={(e) => setAuthor(e.target.value)}
+            value={author.value}
+            onChange={author.onChange}
+            type={author.type}
           />
         </div>
         <div>
           url for more info
           <input
             name="info"
-            value={info}
-            onChange={(e) => setInfo(e.target.value)}
+            value={info.value}
+            onChange={info.onChange}
+            type={info.type}
           />
         </div>
-        <button>create</button>
+        <button type="submit">create</button>
+        <button type="reset" onClick={handleReset}>
+          Reset
+        </button>
       </form>
     </div>
   );
